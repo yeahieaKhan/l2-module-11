@@ -28,6 +28,48 @@ const server: Server = http.createServer(
       }
       res.end(JSON.stringify(resData))
     }
+
+
+
+    //  post route
+    if (req.url === "/users" && req.method === "POST") {
+       res.writeHead(400, { "content-type": "application/json" });
+   let body = "";
+
+   req.on("data", (chunk) => {
+      body += chunk;
+   });
+
+   req.on("end", () => {
+      try {
+         if (!body) {
+            
+            return res.end(JSON.stringify({
+               message: "Body is empty"
+            }));
+         }
+
+         const newUser = JSON.parse(body);
+
+         res.writeHead(201, { "content-type": "application/json" });
+         res.end(JSON.stringify({
+            message: "User Created",
+            user: newUser
+         }));
+
+      } catch (error) {
+         res.writeHead(400, { "content-type": "application/json" });
+         res.end(JSON.stringify({
+            message: "Invalid JSON format"
+         }));
+      }
+   });
+}
+
+
+
+
+
   }
 );
 
